@@ -19,7 +19,7 @@ pragma solidity ^0.4.6;
 
 import "MiniMeToken.sol";
 
-contract ApproveAndVote is TokenController {
+contract ApproveAndVoteGov is TokenController {
 
 
     modifier onlySelf {
@@ -117,7 +117,7 @@ contract ApproveAndVote is TokenController {
         if (    (    (p.status != ProposalStatus.GainingSupport)
                   && (p.status != ProposalStatus.Voting))
              || (now > p.closingTime)
-             || (token.balanceOf(msg.sender) < _amount))
+             || (p.proposalToken.balanceOf(msg.sender) < _amount))
             throw;
 
         if (_support) {
@@ -131,7 +131,12 @@ contract ApproveAndVote is TokenController {
         if (!p.proposalToken.transferFrom(msg.sender, this, _amount)) throw;
 
         if (p.status == ProposalStatus.GainingSupport) {
-            uint supportPercentage = (p.totalYes - p.totalNo)*(10**18) / p.proposalToken.totalSupply();
+            uint supportPercentage;
+            if (p.totalYes > p.totalNo) {
+                supportPercentage = (p.totalYes - p.totalNo)*(10**18) / p.proposalToken.totalSupply();
+            } else {
+                supportPercentage = 0;
+            }
             if ( supportPercentage > percentageToAccept ) {
                 p.status = ProposalStatus.Voting;
                 p.closingTime = now + votingTime;
