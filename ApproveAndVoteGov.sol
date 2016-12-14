@@ -1,4 +1,4 @@
-pragma solidity ^0.4.4;
+pragma solidity ^0.4.6;
 
 /*
     Copyright 2016, Jordi Baylina
@@ -196,8 +196,9 @@ contract ApproveAndVote is TokenController {
         }
     }
 
-
+///////////////////////
 // Setting functions
+///////////////////////
 
     function setVotingTime(uint _newVotingTime) onlySelf {
         votingTime = _newVotingTime;
@@ -220,8 +221,9 @@ contract ApproveAndVote is TokenController {
     }
 
 
-
-// Token controller
+///////////////////
+// Token controller interface
+///////////////////
 
     function proxyPayment(address _owner) payable returns(bool) {
         return false;
@@ -249,8 +251,9 @@ contract ApproveAndVote is TokenController {
         return true;
     }
 
-
-/// Strigng manipulation function
+////////////////////
+// Internal helper functions to manipulate strings
+/////////////////
 
     function strConcat(string _a, string _b, string _c, string _d, string _e) internal returns (string){
         bytes memory _ba = bytes(_a);
